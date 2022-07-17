@@ -1,81 +1,26 @@
-import React, { useState, useEffect } from "react";
-import axios from "axios";
-import { v4 as uuidv4 } from "uuid";
-import { BrowserRouter as Router, Route } from "react-router-dom";
-
-import Header from "./components/Header";
-import Tasks from "./components/Tasks";
-import AddTask from "./components/AddTask";
-import TaskDetails from "./components/TaskDetails";
-
+import React, { useState } from "react";
 import "./App.css";
 
-const App = () => {
-	const [tasks, setTasks] = useState([]);
+function App() {
+	const [values, setValues] = useState();
 
-	useEffect(() => {
-		const fetchTasks = async () => {
-			const { data } = await axios.get(
-				"https://jsonplaceholder.cypress.io/todos?_limit=0"
-			);
-
-			setTasks(data);
-		};
-
-		fetchTasks();
-	}, []);
-
-	const handleTaskClick = (taskId) => {
-		const newTasks = tasks.map((task) => {
-			if (task.id === taskId) return { ...task, completed: !task.completed };
-
-			return task;
-		});
-
-		setTasks(newTasks);
+	console.log(values)
+	const handleChangeValues = (value) => {
+		setValues((prevValue) => ({
+		    ...prevValue,
+			[value.target.name]: value.target.value,
+		}));
 	};
 
-	const handleTaskAddition = (taskTitle) => {
-		const newTasks = [
-			...tasks,
-			{
-				title: taskTitle,
-				id: uuidv4(),
-				completed: false,
-			},
-		];
 
-		setTasks(newTasks);
-	};
+return <div className=".app-container">
+	<div className="register-container">
+		<h1 className="register-title">Teste de CRUD</h1>
+		<input type="text" name="name" placeholder="Nome" className="register-input" onChange={handleChangeValues}></input>
+		<input type="text" name="cost" placeholder="Preço" className="register-input"></input>
+		<button className="register-button">Cadastrar</button>
+	</div>
 
-	const handleTaskDeletion = (taskId) => {
-		const newTasks = tasks.filter((task) => task.id !== taskId);
-
-		setTasks(newTasks);
-	};
-
-	return (
-		<Router>
-			<div className="container">
-				<Header />
-				<Route
-					path="/"
-					exact
-					render={() => (
-						<>
-							<AddTask handleTaskAddition={handleTaskAddition} />
-							<Tasks
-								tasks={tasks}
-								handleTaskClick={handleTaskClick}
-								handleTaskDeletion={handleTaskDeletion}
-							/>
-						</>
-					)}
-				/>
-				<Route path="/:taskTitle" exact component={TaskDetails} />
-			</div>
-		</Router>
-	);
-};
-
+</div>;
+}
 export default App;

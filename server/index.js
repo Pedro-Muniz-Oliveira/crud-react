@@ -20,12 +20,20 @@ app.post("/register", (req, res) => {
   const { cost } = req.body;
 
   let SQL = "INSERT INTO users(nome,custo) VALUES(?,?)";
-   
-    db.query(SQL, [name,cost], (err, result) => {
-        console.log(err);
-    });
 
+  db.query(SQL, [name, cost], (err, result) => {
+    console.log(err);
+  });
   //console.log(name);
+});
+
+app.get("/getCards", (req, res) => {
+  let SQL = "SELECT * FROM `crud-na-pratica`.users;";
+
+  db.query(SQL, (err, result) => {
+    if (err) console.log(err);
+    else res.send(result);
+  });
 });
 
 /* primeiro teste do banco
